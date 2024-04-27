@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <script type="application/shiny-singletons">8c3667a7ee537a9eaeec4bc349eac16cfc96d431</script>
+  <script type="application/html-dependencies">json2[2014.02.04];jquery[1.12.4];shiny[1.1.0];font-awesome[4.7.0];shinyWidgets[0.4.3];bootstrap-switch[3.3.4];shinyBS[0.61];bootstrap-datepicker[1.6.4];selectize[0.11.2];selectPicker[1.12.4];ionrangeslider[2.1.6];strftime[0.9.2];htmlwidgets[1.2];leaflet[1.3.1];leafletfix[1.0.0];Proj4Leaflet[1.0.1];rstudio_leaflet[1.3.1];leaflet-binding[2.0.1];plotly-binding[4.7.1];bootstrap[3.3.7];AdminLTE[2.0.6];shinydashboard[0.7.0]</script>
+<script src="shared/json2-min.js"></script>
+<script src="shared/jquery.min.js"></script>
+<link href="shared/shiny.css" rel="stylesheet" />
+<script src="shared/shiny.min.js"></script>
+<link href="shared/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
+<link href="shinyWidgets/shinyWidgets.css" rel="stylesheet" />
+<script src="shinyWidgets/shinyWidgets-bindings.min.js"></script>
+<link href="shinyWidgets/switchInput/bootstrap-switch-3.3.4/bootstrap-switch.min.css" rel="stylesheet" />
+<script src="shinyWidgets/switchInput/bootstrap-switch-3.3.4/bootstrap-switch.min.js"></script>
+<link href="sbs/shinyBS.css" rel="stylesheet" />
+<script src="sbs/shinyBS.js"></script>
+<link href="shared/datepicker/css/bootstrap-datepicker3.min.css" rel="stylesheet" />
+<script src="shared/datepicker/js/bootstrap-datepicker.min.js"></script>
+<script>
+(function() {
+  var datepicker = $.fn.datepicker.noConflict();
+  $.fn.bsDatepicker = datepicker;
+})();
+</script>
+<link href="shared/selectize/css/selectize.bootstrap3.css" rel="stylesheet" />
+<!--[if lt IE 9]>
+<script src="shared/selectize/js/es5-shim.min.js"></script>
+<![endif]-->
+<script src="shared/selectize/js/selectize.min.js"></script>
+<link href="shinyWidgets/selectPicker/css/bootstrap-select.min.css" rel="stylesheet" />
+<script src="shinyWidgets/selectPicker/js/bootstrap-select.min.js"></script>
+<link href="shared/ionrangeslider/css/ion.rangeSlider.css" rel="stylesheet" />
+<link href="shared/ionrangeslider/css/ion.rangeSlider.skinShiny.css" rel="stylesheet" />
+<script src="shared/ionrangeslider/js/ion.rangeSlider.min.js"></script>
+<script src="shared/strftime/strftime-min.js"></script>
+<script src="htmlwidgets-1.2/htmlwidgets.js"></script>
+<link href="leaflet-1.3.1/leaflet.css" rel="stylesheet" />
+<script src="leaflet-1.3.1/leaflet.js"></script>
+<link href="leafletfix-1.0.0/leafletfix.css" rel="stylesheet" />
+<script src="Proj4Leaflet-1.0.1/proj4-compressed.js"></script>
+<script src="Proj4Leaflet-1.0.1/proj4leaflet.js"></script>
+<link href="rstudio_leaflet-1.3.1/rstudio_leaflet.css" rel="stylesheet" />
+<script src="leaflet-binding-2.0.1/leaflet.js"></script>
+<script src="plotly-binding-4.7.1/plotly.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="shared/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+<script src="shared/bootstrap/js/bootstrap.min.js"></script>
+<script src="shared/bootstrap/shim/html5shiv.min.js"></script>
+<script src="shared/bootstrap/shim/respond.min.js"></script>
+<link href="AdminLTE-2.0.6/AdminLTE.min.css" rel="stylesheet" />
+<link href="AdminLTE-2.0.6/_all-skins.min.css" rel="stylesheet" />
+<script src="AdminLTE-2.0.6/app.min.js"></script>
+<link href="shinydashboard-0.7.0/shinydashboard.css" rel="stylesheet" />
+<script src="shinydashboard-0.7.0/shinydashboard.min.js"></script>  <title>Carte SECMAR</title>
+  <style>
+      .main-sidebar, .left-side {
+        width: 280px;
+      }
+      @media (min-width: 768px) {
+        .content-wrapper,
+        .right-side,
+        .main-footer {
+          margin-left: 280px;
+        }
+        .main-sidebar,
+        .left-side {
+          width: 280px;
+        }
+      }
+      @media (max-width: 767px) {
+        .sidebar-open .content-wrapper,
+        .sidebar-open .right-side,
+        .sidebar-open .main-footer {
+          -webkit-transform: translate(280px, 0);
+          -ms-transform: translate(280px, 0);
+          -o-transform: translate(280px, 0);
+          transform: translate(280px, 0);
+        }
+      }
+      @media (max-width: 767px) {
+        .main-sidebar,
+        .left-side {
+          -webkit-transform: translate(-280px, 0);
+          -ms-transform: translate(-280px, 0);
+          -o-transform: translate(-280px, 0);
+          transform: translate(-280px, 0);
+        }
+      }
+      @media (min-width: 768px) {
+        .sidebar-collapse .main-sidebar,
+        .sidebar-collapse .left-side {
+          -webkit-transform: translate(-280px, 0);
+          -ms-transform: translate(-280px, 0);
+          -o-transform: translate(-280px, 0);
+          transform: translate(-280px, 0);
+        }
+      }
+    </style>
+  <style>.popover-content{
+    font size="4";
+  }</style>
+  <script src="https://www.googletagmanager.com/gtag/js?id=UA-133494078-2"></script>
+  <script>window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+
+gtag('config', 'UA-133494078-2', { 'anonymize_ip': true });</script>
+  <script src="shared/jqueryui/jquery-ui.min.js"></script>
+
+<script src="__assets__/sockjs-0.3.4.min.js"></script>
+<script src="__assets__/shiny-server-client.min.js"></script>
+<script>preShinyInit({reconnect:true,disableProtocols:["xdr-streaming","xhr-streaming","iframe-eventsource","iframe-htmlfile"]});</script>
+<link rel="stylesheet" type="text/css" href="__assets__/shiny-server.css"/>
+
+</head>
+
+<body class="skin-blue" style="min-height: 611px;">
+  <div class="wrapper">
+    <header class="main-header">
+      <span class="logo">Carte SECMAR</span>
+      <nav class="navbar navbar-static-top" role="navigation">
+        <span style="display:none;">
+          <i class="fa fa-bars"></i>
+        </span>
+        <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+          <span class="sr-only">Toggle navigation</span>
+        </a>
+        <div class="navbar-custom-menu">
+          <ul class="nav navbar-nav"></ul>
+        </div>
+      </nav>
+    </header>
+    <aside id="sidebarCollapsed" class="main-sidebar" data-collapsed="false">
+      <section id="sidebarItemExpanded" class="sidebar">
+        <ul class="sidebar-menu">
+          <div>
+            <div style="width:50%; display:inline-block;">
+              <div style="margin: 3px;" class="form-group shiny-input-container">
+                <input id="snosan" type="checkbox" class="sw-switchInput" data-input-id="snosan" data-on-text="ON" data-off-text="OFF" data-label-text="SNOSAN" data-label-width="auto" data-handle-width="auto" data-size=""/>
+              </div>
+            </div>
+            <div style="display:inline-block; ">
+              <button id="q1" type="button" class="btn action-button btn-info btn-xs">
+                <i class="fa fa-question"></i>
+                
+              </button>
+              <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('q1', 'popover', {'container': 'body', 'content': 'Le SNOSAN prend en compte les opérations sur des flotteurs de plaisance, loisirs nautiques et annexes ainsi que les opérations sans flotteur liées à des activités de loisirs nautiques (isolement par la marée, baignade, etc…).', 'placement': 'right', 'trigger': 'hover', 'title': ''})}, 500)});</script>
+            </div>
+          </div>
+          <div style="margin: 3px;" class="form-group shiny-input-container">
+            <input id="heatmap" type="checkbox" class="sw-switchInput" data-input-id="heatmap" data-on-text="Heatmap" data-off-text="Cluster" data-label-text="Changer de visualisation" data-label-width="auto" data-handle-width="auto" data-size="mini"/>
+          </div>
+          <div id="dateRange" class="shiny-date-range-input form-group shiny-input-container">
+            <label class="control-label" for="dateRange">Date d'intervention</label>
+            <div class="input-daterange input-group">
+              <input class="input-sm form-control" type="text" data-date-language="en" data-date-week-start="0" data-date-format="dd/mm/yyyy" data-date-start-view="year" data-initial-date="2024-01-01" data-date-autoclose="true"/>
+              <span class="input-group-addon"> - </span>
+              <input class="input-sm form-control" type="text" data-date-language="en" data-date-week-start="0" data-date-format="dd/mm/yyyy" data-date-start-view="year" data-initial-date="2024-04-23" data-date-autoclose="true"/>
+            </div>
+          </div>
+          <li class="treeview">
+            <a href="#shiny-tab-event">
+              <i class="fa fa-anchor"></i>
+              <span>Événement</span>
+              <i class="fa fa-angle-left pull-right"></i>
+            </a>
+            <ul class="treeview-menu" style="display: none;" data-expanded="Événement">
+              <div class="form-group shiny-input-container">
+                <div class="checkbox">
+                  <label>
+                    <input id="eve" type="checkbox" checked="checked"/>
+                    <span>Tout sélectionner/désélectionner</span>
+                  </label>
+                </div>
+              </div>
+              <div class="form-group shiny-input-container">
+                <label class="control-label" for="evenement">
+                  <h5>Quel motif d'intervention ?</h5>
+                </label>
+                <div>
+                  <select id="evenement" class="form-control" multiple="multiple"><option value="Abordage">Abordage</option>
+<option value="Absence d&#39;un moyen de communication">Absence d'un moyen de communication</option>
+<option value="Accident aéronautique">Accident aéronautique</option>
+<option value="Accident corporel">Accident corporel</option>
+<option value="Accident en mer">Accident en mer</option>
+<option value="Acte de piraterie / terrorisme">Acte de piraterie / terrorisme</option>
+<option value="Autre accident">Autre accident</option>
+<option value="Autre événement">Autre événement</option>
+<option value="Avarie de gréement">Avarie de gréement</option>
+<option value="Avarie de l&#39;appareil à gouverner">Avarie de l'appareil à gouverner</option>
+<option value="Avarie des systèmes de communication">Avarie des systèmes de communication</option>
+<option value="Avarie du système de propulsion">Avarie du système de propulsion</option>
+<option value="Avarie électrique">Avarie électrique</option>
+<option value="Baignade">Baignade</option>
+<option value="Blessé EvaMed">Blessé EvaMed</option>
+<option value="Blessé EvaSan">Blessé EvaSan</option>
+<option value="Blessé avec déroutement">Blessé avec déroutement</option>
+<option value="Blessé avec soin sans déroutement">Blessé avec soin sans déroutement</option>
+<option value="Blessé projection d&#39;une équipe médicale">Blessé projection d'une équipe médicale</option>
+<option value="Chasse sous-marine">Chasse sous-marine</option>
+<option value="Chavirement">Chavirement</option>
+<option value="Chute falaise / Emporté par une lame">Chute falaise / Emporté par une lame</option>
+<option value="Collision">Collision</option>
+<option value="Difficulté de manoeuvre">Difficulté de manoeuvre</option>
+<option value="Disparu en mer">Disparu en mer</option>
+<option value="Découverte d&#39;explosif">Découverte d'explosif</option>
+<option value="Découverte de corps">Découverte de corps</option>
+<option value="Démâtage">Démâtage</option>
+<option value="Désarrimage cargaison">Désarrimage cargaison</option>
+<option value="Encalminage">Encalminage</option>
+<option value="Engin dangereux à bord">Engin dangereux à bord</option>
+<option value="Explosif dans engin">Explosif dans engin</option>
+<option value="Explosion">Explosion</option>
+<option value="Heurt">Heurt</option>
+<option value="Homme à la mer">Homme à la mer</option>
+<option value="Immigration clandestine">Immigration clandestine</option>
+<option value="Immobilisé dans engins / hélice engagée">Immobilisé dans engins / hélice engagée</option>
+<option value="Incendie">Incendie</option>
+<option value="Incertitude">Incertitude</option>
+<option value="Incertitude sur la position">Incertitude sur la position</option>
+<option value="Inexpérience">Inexpérience</option>
+<option value="Isolement par la marée / Envasé">Isolement par la marée / Envasé</option>
+<option value="Loisir nautique">Loisir nautique</option>
+<option value="Malade EvaMed">Malade EvaMed</option>
+<option value="Malade EvaSan">Malade EvaSan</option>
+<option value="Malade avec déroutement">Malade avec déroutement</option>
+<option value="Malade avec soin sans déroutement">Malade avec soin sans déroutement</option>
+<option value="Malade projection d&#39;une équipe médicale">Malade projection d'une équipe médicale</option>
+<option value="Mouillage immobilisé">Mouillage immobilisé</option>
+<option value="Naufrage">Naufrage</option>
+<option value="Non renseigné">Non renseigné</option>
+<option value="Panne de carburant">Panne de carburant</option>
+<option value="Perte de pontée">Perte de pontée</option>
+<option value="Perte de stabilité / Ripage de cargaison">Perte de stabilité / Ripage de cargaison</option>
+<option value="Plongée avec bouteille">Plongée avec bouteille</option>
+<option value="Plongée en apnée">Plongée en apnée</option>
+<option value="Problème médical">Problème médical</option>
+<option value="Rupture de mouillage">Rupture de mouillage</option>
+<option value="Sans avarie en dérive">Sans avarie en dérive</option>
+<option value="Sans avarie inexpérience">Sans avarie inexpérience</option>
+<option value="Situation indéterminée">Situation indéterminée</option>
+<option value="Ski nautique">Ski nautique</option>
+<option value="Suicide">Suicide</option>
+<option value="Talonnage">Talonnage</option>
+<option value="Toutes fausses alertes">Toutes fausses alertes</option>
+<option value="Transport sanitaire île-continent">Transport sanitaire île-continent</option>
+<option value="Trouble à l&#39;ordre public">Trouble à l'ordre public</option>
+<option value="Voie d&#39;eau">Voie d'eau</option>
+<option value="Échouement">Échouement</option></select>
+                  <script type="application/json" data-for="evenement">{}</script>
+                </div>
+              </div>
+            </ul>
+          </li>
+          <li class="treeview">
+            <a href="#shiny-tab-cross">
+              <i class="fa fa-male"></i>
+              <span>CROSS et département</span>
+              <i class="fa fa-angle-left pull-right"></i>
+            </a>
+            <ul class="treeview-menu" style="display: none;" data-expanded="CROSSetdépartement">
+              <div class="form-group shiny-input-container">
+                <label class="control-label" for="cross">
+                  <h5>Quel CROSS a coordonné l'intervention ?</h5>
+                </label>
+                <br/>
+                <select id="cross" class="selectpicker form-control" data-selected-text-format="count &gt; 5" data-count-selected-text="{0} CROSS sélectionnés" data-actions-box="true" data-deselect-all-text="Tout désélectionner" data-select-all-text="Tout sélectionner" multiple="multiple">
+                  <option value="Adge" selected="selected">Adge</option>
+                  <option value="Antilles-Guyane" selected="selected">Antilles-Guyane</option>
+                  <option value="Corse" selected="selected">Corse</option>
+                  <option value="Corsen" selected="selected">Corsen</option>
+                  <option value="Gris-Nez" selected="selected">Gris-Nez</option>
+                  <option value="Guadeloupe" selected="selected">Guadeloupe</option>
+                  <option value="Guyane" selected="selected">Guyane</option>
+                  <option value="Jobourg" selected="selected">Jobourg</option>
+                  <option value="La Garde" selected="selected">La Garde</option>
+                  <option value="La Réunion" selected="selected">La Réunion</option>
+                  <option value="Martinique" selected="selected">Martinique</option>
+                  <option value="Mayotte" selected="selected">Mayotte</option>
+                  <option value="Nouvelle-Calédonie" selected="selected">Nouvelle-Calédonie</option>
+                  <option value="Polynésie" selected="selected">Polynésie</option>
+                  <option value="Soulac" selected="selected">Soulac</option>
+                  <option value="Étel" selected="selected">Étel</option>
+                </select>
+              </div>
+              <div class="form-group shiny-input-container">
+                <div class="checkbox">
+                  <label>
+                    <input id="dep" type="checkbox" checked="checked"/>
+                    <span>Tout sélectionner/désélectionner</span>
+                  </label>
+                </div>
+              </div>
+              <div class="form-group shiny-input-container">
+                <label class="control-label" for="departement">
+                  <h5>Quels sont les départements ?</h5>
+                </label>
+                <div>
+                  <select id="departement" class="form-control" multiple="multiple"><option value="971sb">971sb</option>
+<option value="971sm">971sm</option>
+<option value="987aus">987aus</option>
+<option value="987gam">987gam</option>
+<option value="988sud">988sud</option>
+<option value="Alpes-Maritimes">Alpes-Maritimes</option>
+<option value="Aude">Aude</option>
+<option value="Bouches-du-Rhône">Bouches-du-Rhône</option>
+<option value="Calvados">Calvados</option>
+<option value="Charente-Maritime">Charente-Maritime</option>
+<option value="Collectivité de Saint Barthélémy">Collectivité de Saint Barthélémy</option>
+<option value="Collectivité de Saint Martin">Collectivité de Saint Martin</option>
+<option value="Corse">Corse</option>
+<option value="Corse-du-Sud">Corse-du-Sud</option>
+<option value="Côtes-d&#39;Armor">Côtes-d'Armor</option>
+<option value="Eure">Eure</option>
+<option value="Finistère">Finistère</option>
+<option value="Gard">Gard</option>
+<option value="Gironde">Gironde</option>
+<option value="Guadeloupe">Guadeloupe</option>
+<option value="Guyane">Guyane</option>
+<option value="Haute-Corse">Haute-Corse</option>
+<option value="Hérault">Hérault</option>
+<option value="Ille-et-Vilaine">Ille-et-Vilaine</option>
+<option value="La Réunion">La Réunion</option>
+<option value="Landes">Landes</option>
+<option value="Loire-Atlantique">Loire-Atlantique</option>
+<option value="Manche">Manche</option>
+<option value="Martinique">Martinique</option>
+<option value="Mayotte">Mayotte</option>
+<option value="Morbihan">Morbihan</option>
+<option value="Non renseigné">Non renseigné</option>
+<option value="Nord">Nord</option>
+<option value="Nouvelle-Calédonie">Nouvelle-Calédonie</option>
+<option value="Pas-de-Calais">Pas-de-Calais</option>
+<option value="Polynésie">Polynésie</option>
+<option value="Pyrénées-Atlantiques">Pyrénées-Atlantiques</option>
+<option value="Pyrénées-Orientales">Pyrénées-Orientales</option>
+<option value="Réunion">Réunion</option>
+<option value="Saint-Pierre-et-Miquelon">Saint-Pierre-et-Miquelon</option>
+<option value="Seine-Maritime">Seine-Maritime</option>
+<option value="Somme">Somme</option>
+<option value="Var">Var</option>
+<option value="Vendée">Vendée</option></select>
+                  <script type="application/json" data-for="departement">{}</script>
+                </div>
+              </div>
+            </ul>
+          </li>
+          <li class="treeview">
+            <a href="#shiny-tab-season">
+              <i class="fa fa-hourglass"></i>
+              <span>Heure et saison</span>
+              <i class="fa fa-angle-left pull-right"></i>
+            </a>
+            <ul class="treeview-menu" style="display: none;" data-expanded="Heureetsaison">
+              <div class="form-group shiny-input-container shiny-input-checkboxgroup shiny-input-container-inline">
+                <label class="control-label" for="saison">Saison</label>
+                <br/>
+                <div class="checkboxGroupButtons" id="saison" style="margin-top: 3px; margin-bottom: 3px; width: 100%;">
+                  <div aria-label="..." class="btn-group btn-group-justified btn-group-container-sw" data-toggle="buttons" role="group">
+                    <div class="btn-group" role="group">
+                      <button class="btn checkbtn btn-primary active">
+                        <span class="check-btn-icon-yes">
+                          <i class="glyphicon glyphicon-ok"></i>
+                        </span>
+                        <span class="check-btn-icon-no">
+                          <i class="glyphicon glyphicon-remove"></i>
+                        </span>
+                        <input type="checkbox" autocomplete="off" name="saison" value="Basse saison" checked="checked">Basse saison</input>
+                      </button>
+                    </div>
+                    <div class="btn-group" role="group">
+                      <button class="btn checkbtn btn-primary active">
+                        <span class="check-btn-icon-yes">
+                          <i class="glyphicon glyphicon-ok"></i>
+                        </span>
+                        <span class="check-btn-icon-no">
+                          <i class="glyphicon glyphicon-remove"></i>
+                        </span>
+                        <input type="checkbox" autocomplete="off" name="saison" value="Haute saison" checked="checked">Haute saison</input>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('saison', 'popover', {'container': 'body', 'content': 'La haute saison concerne les opérations du 1er mai au 30 septembre.', 'placement': 'right', 'trigger': 'hover', 'title': ''})}, 500)});</script>
+              <div class="form-group shiny-input-container">
+                <label class="control-label" for="heure">Heure de l'alerte (UTC)</label>
+                <input class="js-range-slider" id="heure" data-type="double" data-min="0" data-max="24" data-from="0" data-to="24" data-step="1" data-grid="true" data-grid-num="8" data-grid-snap="false" data-prettify-separator="," data-prettify-enabled="true" data-keyboard="true" data-drag-interval="true" data-data-type="number"/>
+              </div>
+            </ul>
+          </li>
+          <li class="treeview">
+            <a href="#shiny-tab-op">
+              <i class="fa fa-ambulance"></i>
+              <span>Type d'opérations</span>
+              <i class="fa fa-angle-left pull-right"></i>
+            </a>
+            <ul class="treeview-menu" style="display: none;" data-expanded="Typed&#39;opérations">
+              <div class="form-group shiny-input-container">
+                <label class="control-label" for="operation">
+                  <h5>Quel type d'intervention ?</h5>
+                </label>
+                <br/>
+                <select id="operation" class="selectpicker form-control" data-selected-text-format="count &gt; 5" data-count-selected-text="{0} types sélectionnés" data-actions-box="true" data-deselect-all-text="Tout désélectionner" data-select-all-text="Tout sélectionner" multiple="multiple">
+                  <option value="DIV" selected="selected">DIV</option>
+                  <option value="MAS" selected="selected">MAS</option>
+                  <option value="Non renseigné" selected="selected">Non renseigné</option>
+                  <option value="POL" selected="selected">POL</option>
+                  <option value="SAR" selected="selected">SAR</option>
+                  <option value="SUR" selected="selected">SUR</option>
+                </select>
+              </div>
+            </ul>
+          </li>
+          <li class="treeview">
+            <a href="#shiny-tab-boat">
+              <i class="fa fa-ship"></i>
+              <span>Flotteur</span>
+              <i class="fa fa-angle-left pull-right"></i>
+            </a>
+            <ul class="treeview-menu" style="display: none;" data-expanded="Flotteur">
+              <h5>Quel type de flotteur a été impliqué ?</h5>
+              <div class="form-group shiny-input-container">
+                <select id="flotteur" class="selectpicker form-control" data-selected-text-format="count &gt; 5" data-count-selected-text="{0} flotteurs sélectionnés" data-actions-box="true" data-deselect-all-text="Tout désélectionner" data-select-all-text="Tout sélectionner" multiple="multiple">
+                  <option value="Commerce" selected="selected">Commerce</option>
+                  <option value="Plaisance" selected="selected">Plaisance</option>
+                  <option value="Loisirs nautiques" selected="selected">Loisirs nautiques</option>
+                  <option value="Pêche" selected="selected">Pêche</option>
+                  <option value="Autre" selected="selected">Autre</option>
+                  <option value="Aeronéf" selected="selected">Aeronéf</option>
+                  <option value="Sans flotteur" selected="selected">Sans flotteur</option>
+                </select>
+              </div>
+              <div class="form-group shiny-input-container">
+                <label class="control-label" for="plaisance">Plaisance</label>
+                <br/>
+                <select id="plaisance" class="selectpicker form-control" data-selected-text-format="count &gt; 5" data-count-selected-text="{0} flotteurs de plaisance sélectionnés" multiple="multiple">
+                  <option value="Moteur &lt; 8m">Moteur &lt; 8m</option>
+                  <option value="Moteur &gt; 8m">Moteur &gt; 8m</option>
+                  <option value="Voile">Voile</option>
+                  <option value="Autre" selected="selected">Autre</option>
+                </select>
+              </div>
+              <div class="form-group shiny-input-container">
+                <label class="control-label" for="loisirs">Loisirs nautiques</label>
+                <br/>
+                <select id="loisirs" class="selectpicker form-control" data-selected-text-format="count &gt; 5" data-count-selected-text="{0} flotteurs loisirs nautiques sélectionnés" multiple="multiple">
+                  <option value="Planche à voile" selected="selected">Planche à voile</option>
+                  <option value="Kitesurf" selected="selected">Kitesurf</option>
+                  <option value="Plaisance voile légère" selected="selected">Plaisance voile légère</option>
+                  <option value="Ski nautique" selected="selected">Ski nautique</option>
+                  <option value="Surf" selected="selected">Surf</option>
+                  <option value="Autre loisir nautique" selected="selected">Autre loisir nautique</option>
+                  <option value="Engin de plage" selected="selected">Engin de plage</option>
+                  <option value="Canoë / Kayak / Aviron" selected="selected">Canoë / Kayak / Aviron</option>
+                  <option value="Vehicule nautique à moteur" selected="selected">Vehicule nautique à moteur</option>
+                </select>
+              </div>
+            </ul>
+          </li>
+          <li class="treeview">
+            <a href="#shiny-tab-gravite">
+              <i class="fa fa-heartbeat"></i>
+              <span>Gravité</span>
+              <i class="fa fa-angle-left pull-right"></i>
+            </a>
+            <ul class="treeview-menu" style="display: none;" data-expanded="Gravité">
+              Intervention impliquant au moins
+              <br/>
+              1 décédé ou disparu
+              <div style="margin: 3px;" class="form-group shiny-input-container">
+                <input id="deces" type="checkbox" class="sw-switchInput" data-input-id="deces" data-on-text="ON" data-off-text="OFF" data-label-width="auto" data-handle-width="auto" data-size="mini"/>
+              </div>
+              Intervention impliquant au moins
+              <br/>
+              1 moyen aérien
+              <div style="margin: 3px;" class="form-group shiny-input-container">
+                <input id="aerien" type="checkbox" class="sw-switchInput" data-input-id="aerien" data-on-text="ON" data-off-text="OFF" data-label-width="auto" data-handle-width="auto" data-size="mini"/>
+              </div>
+            </ul>
+          </li>
+          <li class="treeview">
+            <a href="#shiny-tab-cote">
+              <i class="fa fa-globe"></i>
+              <span>Distance des côtes et responsabilité</span>
+              <i class="fa fa-angle-left pull-right"></i>
+            </a>
+            <ul class="treeview-menu" style="display: none;" data-expanded="Distancedescôtesetresponsabilité">
+              
+              <div class="form-group shiny-input-container">
+                <label class="control-label" for="cotes">
+                  <h5>À quelle distance des côtes se déroule les interventions ?</h5>
+                </label>
+                <br/>
+                <select id="cotes" class="selectpicker form-control" data-selected-text-format="count &gt; 5" data-count-selected-text="Toutes les distances" data-actions-box="true" data-deselect-all-text="Tout désélectionner" data-select-all-text="Tout sélectionner" multiple="multiple">
+                  <option value="0-2 milles" selected="selected">0-2 milles</option>
+                  <option value="6-60 milles" selected="selected">6-60 milles</option>
+                  <option value="+60 milles" selected="selected">+60 milles</option>
+                  <option value="2-6 milles" selected="selected">2-6 milles</option>
+                </select>
+              </div>
+              <div class="form-group shiny-input-container">
+                <label class="control-label" for="zones">
+                  <h5>Quelle est la zone de responsabilité de l'intervention ?</h5>
+                </label>
+                <br/>
+                <select id="zones" class="selectpicker form-control" data-selected-text-format="count &gt; 5" data-count-selected-text="Toutes les zones" data-actions-box="true" data-deselect-all-text="Tout désélectionner" data-select-all-text="Tout sélectionner" multiple="multiple">
+                  <option value="Hors responsabilité" selected="selected">Hors responsabilité</option>
+                  <option value="Responsabilité étrangère" selected="selected">Responsabilité étrangère</option>
+                  <option value="Responsabilité française" selected="selected">Responsabilité française</option>
+                  <option value="Eaux territoriales" selected="selected">Eaux territoriales</option>
+                  <option value="Plage et 300 mètres" selected="selected">Plage et 300 mètres</option>
+                  <option value="Port et accès" selected="selected">Port et accès</option>
+                  <option value="Non renseignée" selected="selected">Non renseignée</option>
+                </select>
+              </div>
+            </ul>
+          </li>
+          <button id="doc" type="button" class="btn btn-default action-button" style="margin: 4px 5px 6px 5px; background-color: #222d32;color: #b8c7ce;border-color:#222d32">
+            <i class="fa fa-book"></i>
+            &nbsp;&nbsp;Documentation
+          </button>
+          <a id="downloadData" class="btn btn-default shiny-download-link " href="" target="_blank" download style="padding:7px; font-size:80%; margin-left:1.5em; margin-top:1em">
+            <i class="fa fa-download"></i>
+            Télécharger les données dans la zone (Excel)
+          </a>
+          <br/>
+          <br/>
+          <a id="downloadDataCSV" class="btn btn-default shiny-download-link " href="" target="_blank" download style="padding:7px; font-size:80%; margin-left:1.5em; margin-top: -1em">
+            <i class="fa fa-download"></i>
+            Télécharger les données dans la zone (CSV)
+          </a>
+        </ul>
+        <br/>
+        <div style="margin-left:1.5em; color: #b8c7ce; font-size:80%;">
+          <div id="bornes" class="shiny-text-output"></div>
+          <div id="zoom" class="shiny-text-output"></div>
+        </div>
+      </section>
+    </aside>
+    <div class="content-wrapper">
+      <section class="content">
+        <div class="container-fluid">
+          <div class="outer">
+            <style type="text/css">.outer {position: fixed; top: 41px; left: 0; right: 0; bottom: 0; overflow: hidden; padding: 0}</style>
+            <div id="mymap" style="width:100%; height:100%; " class="leaflet html-widget html-widget-output"></div>
+            <div class="col-sm-5">
+              <pre id="textbounds" class="shiny-text-output noplaceholder"></pre>
+            </div>
+            <div class="panel panel-default draggable" id="controls" style="top:20px;left:auto;right:20px;bottom:auto;width:350px;height:auto;position:fixed;cursor:move;">
+              <div style="padding: 10px;">
+                <br/>
+                <h4>
+                  <div id="operation" class="shiny-text-output"></div>
+                </h4>
+                <br/>
+                <div class="form-group shiny-input-container">
+                  <label class="control-label" for="pie">Choisissez votre visualisation</label>
+                  <div>
+                    <select id="pie" class="form-control"><option value="Répartition du top 5 événements">Répartition du top 5 événements</option>
+<option value="Répartition du bilan humain" selected>Répartition du bilan humain</option>
+<option value="Répartition phase de la journée">Répartition phase de la journée</option>
+<option value="Répartition des flotteurs">Répartition des flotteurs</option>
+<option value="Répartition nombre de moyens engagés">Répartition nombre de moyens engagés</option>
+<option value="Répartition heures de moyens engagés">Répartition heures de moyens engagés</option>
+<option value="Evolution temporelle">Evolution temporelle</option></select>
+                    <script type="application/json" data-for="pie">{}</script>
+                  </div>
+                </div>
+                <div id="camembert" style="width:100%; height:250px; " class="plotly html-widget html-widget-output"></div>
+                <br/>
+                <div class="form-group shiny-input-container">
+                  <label class="control-label" for="histo">Choisissez votre visualisation</label>
+                  <div>
+                    <select id="histo" class="form-control"><option value="Force du vent" selected>Force du vent</option>
+<option value="Force de la mer">Force de la mer</option>
+<option value="Direction du vent">Direction du vent</option></select>
+                    <script type="application/json" data-for="histo">{}</script>
+                  </div>
+                </div>
+                <br/>
+                <div id="hist" class="shiny-plot-output" style="width: 100% ; height: 200px"></div>
+              </div>
+            </div>
+            <script>$(".draggable").draggable();</script>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+</body>
+
+</html>
