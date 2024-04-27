@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carte Secmar Dashboard</title>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    
+    <title>Carte Secmar Dashboard de ouf</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: flex-start;
+            margin: 0;
+            padding: 0;
+            font-family: "Open Sans", "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif;
+            background-color: #1f2630;
+            overflow-y: hidden; /* Empêcher le défilement vertical */
+            border: 2px solid #ffffff; /* Ajouter une bordure blanche */
+        }
+        .sidebar {
+            background-color: #252e3f;
+            width: 260px;
+            padding: 10px;
+            border: 3px solid #4e576a;
+            margin-top: 20px;
+            overflow-y: auto;
+            height: 87vh;
+            text-align: left;
+            font-size: 24px;
+            color: #fff;
+            margin-bottom: 20px;
+        }
+        /* Style pour la scrollbar */
+        .sidebar::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .sidebar::-webkit-scrollbar-thumb {
+            background-color: #4e576a; /* Couleur de la poignée */
+            border-radius: 4px; /* Arrondi de la poignée */
+        }
+
+        .sidebar::-webkit-scrollbar-track {
+            background-color: #333a4d; /* Couleur de la piste */
+        }
+        .logo {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-size: 20px;
+            color: #000;
+        }
+        select {
+            width: 100%;
+            padding: 5px;
+            margin-bottom: 10px;
+        }
+        #pie-chart {
+            background-color: #252e3f;
+            width: 450px;
+            height: 50vh;
+            margin: 16px auto;
+            border: 3px solid #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            overflow: hidden;
+            height: 50vh;
+            margin: 16px;
+            display: center;
+            justify-content: center;
+            align-items: center;
+            flex-grow: 1;
+            margin: 16px;
+            border: 3px solid #e9dfdf;
+        }
+        .map-container {
+            flex-grow: 1;
+            margin: 8px; /* Réduire la marge autour du map-container */
+            border: 10px solid #4e576a;
+            height: 100vh; /* Réduire la hauteur du map-container */
+            overflow-y: hidden;
+            margin-top: 20px; /* Abaisser la position vers le bas de la page */
+        }
+        
+        .leaflet-container {
+            height: 80vh;
+        }
+        .content {
+            flex-grow: 1;
+            width: calc(100% - 240px);
+            height: calc(100vh - 40px);
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+        .chart-container {
+            margin: 20px;
+            border: 3px solid #e9dfdf;
+            background-color: #252e3f;
+            height: 30vh;
+            margin: 10px;
+        }   
+        .chart-button {
+            position: absolute;
+            top: 50px;
+            right: 45px;
+            z-index: 9999; /* Assure que les boutons sont au-dessus de la carte */
+            color: #ffffff; /* Couleur du texte */
+            border: 3px solid  #4e576a; ; /* Bordure */
+            border-radius: 8px; /* Arrondi réduit */
+            background-color: #072651; /* Couleur de fond */
+            transition: all 0.3s ease-in-out;
+            box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.2); /* Ombre */
+            padding: 0.5rem 1.25rem; /* Rembourrage */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 15px;
+            outline: none;
+            overflow: hidden;
+        }
+        
+        /* Ajout d'un hover pour le changement de couleur au survol */
+        .chart-button:hover {
+            background-color: rgb(0, 107, 179); /* Nouvelle couleur de fond au survol */
+        }
+        .chart-button2:hover {
+            background-color: rgb(0, 107, 179); /* Nouvelle couleur de fond au survol */
+        }
+
+        .chart-button2 {
+            position: absolute;
+            top: 50px;
+            right: 320px; /* Décalez le deuxième bouton vers la gauche */
+            z-index: 9999; /* Assure que les boutons sont au-dessus de la carte */
+            color: #ffffff; /* Couleur du texte */
+            border: 3px solid #4e576a; ; /* Bordure */
+            border-radius: 8px; /* Arrondi réduit */
+            background-color: #072651; /* Couleur de fond */
+            transition: all 0.3s ease-in-out;
+            box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.2); /* Ombre */
+            padding: 0.5rem 1.25rem; /* Rembourrage */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 15px;
+            outline: none;
+            overflow: hidden;
+        }
+        .label-title {
+            color: white; /* Changement de couleur du texte en blanc */
+        }
+          /* Style pour les fenêtres de dialogue */
+        .ui-dialog {
+            background-color: #1f2630; /* Définir la couleur de fond */
+            border: none;
+        }
+
+        /* Style pour le titre des fenêtres de dialogue */
+        .ui-dialog-titlebar {
+            background-color: #1f2630; /* Définir la couleur de fond */
+            color: #ffffff; /* Définir la couleur du texte */
+            border: none;
+        }
+        .legend {
+            background-color: #1f2630 !important; /* Définir la couleur de fond de la légende */
+        }
+        #dialog-bar {
+            background-color: #1f2630; /* Couleur de fond personnalisée */
+        }
+        .page {
+            display: none; /* Masquer toutes les pages par défaut */
+            width: 100%; /* Assurez-vous que la page occupe toute la largeur */
+            height: calc(100vh - 40px); /* Hauteur égale à la hauteur de la fenêtre moins la hauteur de la barre de titre */
+            overflow-y: auto; /* Activer le défilement vertical si nécessaire */
+        }
+        /* Nouveau style pour les liens de navigation */
+        .nav-links {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .nav-links a {
+            margin-right: 10px;
+            font-size: 18px;
+            color: #fff;
+            text-decoration: none;
+        }
+        .nav-links a:hover {
+            color: #72bcd4;
+        }
+        /* Nouveau style pour les liens de navigation */
+        .nav-links {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .nav-links a {
+            margin-right: 10px;
+            font-size: 18px;
+            color: #fff;
+            text-decoration: none;
+        }
+        .nav-links a:hover {
+            color: #72bcd4;
+        }
+        /* Style de la grille */
+        .button-container {
+            display: grid;
+            grid-template-columns: 1fr; /* Une colonne pour chaque bouton */
+            gap: 10px; /* Espacement entre les boutons */
+            margin-top: 50px; /* Ajout de marge en haut */
+            margin-right: 10px; /* Ajout de marge à droite */
+            margin-left: 10px; /* Ajout de marge à gauche */
+        }
+        /* Style des boutons */
+        .button {
+            background-color: #072651; /* Couleur de fond */
+            border: none;
+            color: white; /* Couleur du texte */
+            padding: 15px 32px; /* Espacement autour du texte */
+            text-align: center;
+            text-decoration: none;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 8px; /* Bord arrondi */
+            box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25); /* Ombre pour l'effet 3D */
+        }
+
+        /* Style des boutons au survol */
+        .button:hover {
+            background-color: #FFCC00; /* Couleur de fond au survol */
+            box-shadow: 0px 8px 8px rgba(0, 0, 0, 0.25); /* Ombre plus prononcée au survol */
+        }
+    </style>
+</head>
+<body>
+    <div class="button-container">
+
+        <!-- Bouton "Bilan humain" -->
+        <a href="/page1" class="button">Bilan humain</a>
+    
+        <!-- Bouton "Zone géographique" -->
+        <a href="/page2" class="button">Zone géographique</a>
+    
+    </div>
+
+
+    <div class="sidebar">
+        <div class="logo">
+            <img src="https://statandmore.com/images/logo.png" alt="Logo" width="220" height="100">
+        </div>
+        <h1>SECMAR</h1> <!-- Titre modifié -->
+        <form action="/" method="post">
+            <label for="type_operation" style="color: white;font-size: 13px;font-weight: bold;font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Police d'écriture moderne */"">Type d'opération</label>
+            <select name="type_operation" id="type_operation" onchange="this.form.submit()">
+                <option value="Tous">Tous</option>
+                {% for op in sorted(df_final['type_operation'].unique()) %}
+                <option value="{{ op }}"{{ " selected" if op == type_operation else "" }}>{{ op }}</option>
+                {% endfor %}
+            </select>
+            <label for="departement" style="color: white;font-size: 13px;font-weight: bold;font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Police d'écriture moderne */"">Département:</label>
+            <select name="departement" id="departement" onchange="this.form.submit()">
+                <option value="Tous">Tous</option>
+                {% for dep in sorted(df_final['departement'].unique()) %}
+                <option value="{{ dep }}"{{ " selected" if dep == departement else "" }}>{{ dep }}</option>
+                {% endfor %}
+            </select>
+            <!-- Nouveaux filtres ajoutés -->
+            <label for="evenement" style="color: white;font-size: 13px;font-weight: bold;font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Police d'écriture moderne */"">Événement:</label>
+            <select name="evenement" id="evenement" onchange="this.form.submit()">
+                <option value="Tous">Tous</option>
+                {% for evt in sorted(df_final['evenement'].unique()) %}
+                <option value="{{ evt }}"{{ " selected" if evt == evenement else "" }}>{{ evt }}</option>
+                {% endfor %}
+            </select>
+            <label for="saison" style="color: white;font-size: 13px;font-weight: bold;font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Police d'écriture moderne */"">Saison:</label>
+            <select name="saison" id="saison" onchange="this.form.submit()">
+                <option value="Tous">Tous</option>
+                {% for saison in sorted(df_final['saison'].unique()) %}
+                <option value="{{ saison }}"{{ " selected" if saison == saison else "" }}>{{ saison }}</option>
+                {% endfor %}
+            </select>
+            <label for="pavillon" style="color: white;font-size: 13px;font-weight: bold;font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Police d'écriture moderne */"">Pavillon:</label>
+            <select name="pavillon" id="pavillon" onchange="this.form.submit()">
+                <option value="Tous">Tous</option>
+                {% for pav in df_final['pavillon'].astype('str').unique()|sort %}
+                <option value="{{ pav }}"{{ " selected" if pav == pavillon else "" }}>{{ pav }}</option>
+                {% endfor %} 
+            </select> 
+            <label for="date" style="color: white;font-size: 13px;font-weight: bold;font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Police d'écriture moderne */"">Date:</label>
+            <select name="date" id="date" onchange="this.form.submit()">
+                <option value="Tous">Tous</option>
+                {% for dt in sorted(df_final['date'].unique()) %}
+                    <option value="{{ dt }}"{{ " selected" if dt == date else "" }}>{{ dt }}</option>
+                {% endfor %}
+            </select>
+            <label for="zone_responsabilite" style="color: white;font-size: 13px;font-weight: bold;font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Police d'écriture moderne */"">Zone de responsabilité:</label>
+            <select name="zone_responsabilite" id="zone_responsabilite" onchange="this.form.submit()">
+                <option value="Tous">Tous</option>
+                {% for zr in sorted(df_final['zone_responsabilite'].unique()) %}
+                    <option value="{{ zr }}"{{ " selected" if zr == zone_responsabilite else "" }}>{{ zr }}</option>
+                {% endfor %}
+            </select>
+            <label for="autorite" style="color: white;font-size: 13px;font-weight: bold;font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Police d'écriture moderne */"">Autorité:</label>
+            <select name="autorite" id="autorite" onchange="this.form.submit()">
+                <option value="Tous">Tous</option>
+                {% for aut in sorted(df_final['autorite'].unique()) %}
+                    <option value="{{ aut }}"{{ " selected" if aut == autorite else "" }}>{{ aut }}</option>
+                {% endfor %}
+            </select>
+            <label for="categorie_evenement" style="color: white;font-size: 13px;font-weight: bold;font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Police d'écriture moderne */"">Catégorie d'événement:</label>
+            <select name="categorie_evenement" id="categorie_evenement" onchange="this.form.submit()">
+                <option value="Tous">Tous</option>
+                {% for ce in sorted(df_final['categorie_evenement'].unique()) %}
+                    <option value="{{ ce }}"{{ " selected" if ce == categorie_evenement else "" }}>{{ ce }}</option>
+                {% endfor %}
+            </select>
+            <label for="cross" style="color: white;font-size: 13px;font-weight: bold;font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Police d'écriture moderne */"">CROSS:</label>
+            <select name="cross" id="cross" onchange="this.form.submit()">
+                <option value="Tous">Tous</option>
+                {% for cr in sorted(df_final['cross'].unique()) %}
+                    <option value="{{ cr }}"{{ " selected" if cr == cross else "" }}>{{ cr }}</option>
+                {% endfor %}
+            </select>
+            <label for="date" style="color: white;font-size: 13px;font-weight: bold;font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Police d'écriture moderne */"">Date:</label>
+            <select name="date" id="date" onchange="this.form.submit()">
+                <option value="Tous">Tous</option>
+                {% for dt in sorted(df_final['date'].unique()) %}
+                    <option value="{{ dt }}"{{ " selected" if dt == date else "" }}>{{ dt }}</option>
+                {% endfor %}
+            </select>
+            <!-- Fin des nouveaux filtres -->
+        </form>
+    </div>
+   
+    <div class="content">
+        <div class="map-container">
+            {{ map_html | safe }}
+        </div>
+        <button id="open-pie-chart" class="chart-button">Analyse par type d'évenement</button>
+        <button id="open-bar-chart" class="chart-button2">Analyse par type de flotteur</button>
+
+        <div id="dialog-pie" title="Répartition des événements" style="display: none; width: 80%;">
+            {{ img_html | safe }}
+        </div>
+        <div id="dialog-bar" title="Analyse par type de flotteur" style="display: none; background-color: #1f2630;">
+            {{ bar_chart | safe }}
+        </div>     
+        
+
+    </div>
+
+    <script src="//code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="//code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $("#open-pie-chart").click(function() {
+                $("#dialog-pie").dialog({
+                    modal: false, // Définir à false pour permettre l'interaction avec le reste de la page
+                    width: 700,
+                    resizable: true, // Permettre le redimensionnement de la fenêtre
+                    draggable: true, // Permettre le déplacement de la fenêtre
+                    closeOnEscape: true
+                });
+            });
+    
+            $("#open-bar-chart").click(function() {
+                $("#dialog-bar").dialog({
+                    modal: false, // Définir à false pour permettre l'interaction avec le reste de la page
+                    width: 600,
+                    resizable: true, // Permettre le redimensionnement de la fenêtre
+                    draggable: true, // Permettre le déplacement de la fenêtre
+                    closeOnEscape: true,
+                    color: '#1f2630'
+        
+                });
+            });
+        });
+        
+    </script>
+    
+</body>
+</html>
